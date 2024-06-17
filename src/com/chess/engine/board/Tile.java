@@ -1,84 +1,50 @@
 package com.chess.engine.board;
 
-import java.util.HashMap;
-import java.util.Map;
 import com.chess.engine.pieces.Piece;
-import com.google.common.collect.ImmutableMap;
 
-//Classe abstrata faz com que não seja possivel criar "new Tile", mas sim uma vazia ou ocupada.
-public abstract class Tile {
+public class Tile {
 
-    protected final int tileCoord;
+    private final Position position;
+    private Piece pieceOnTile;
 
-    //Criar todas as possibilidades de Tile's vazios ao carregar o código
-    //para não ser necessario criar na hora, pegando do cache
-    private static final Map<Integer, EmptyTile> EMPTY_TILES_Cache = createAllPossibleEmptyFiles();
-    
-    private static Map<Integer, EmptyTile> createAllPossibleEmptyFiles() {
-        
-        final Map<Integer, EmptyTile> emptyTileMap = new HashMap<>();
+    private Tile(final Position position) 
+    { 
+        this.position = position;
+    }
 
-        for(int i = 0; i< 64; i++){
-            emptyTileMap.put(i, new EmptyTile(i));
-        }
+    public Piece getPieceOnTile() {
+        return this.pieceOnTile;
+    }
 
-        //Biblioteca do google para não ser possível alterar o mapa gerado
-        return ImmutableMap.copyOf(emptyTileMap);
+    public Position getPosition() {
+        return this.position;
+    }
+
+    public void setPieceOnTile(final Piece pieceOnTile) {
+        this.pieceOnTile = pieceOnTile;
+    }
+
+    public static Tile getInstance (final Position position) {
+        return new Tile(position);
+    }
+
+    public boolean isTileOccupied() {
+        return this.pieceOnTile != null;
     }
     
-    //Somente é possivel criar um Tile por aqui, recebendo um tile ja existente ocupado
-    //ou um vazio já existente no Map
-    public static Tile createTile(final int tileCoord, final Piece piece){
-        return piece != null ? new OccupiedTile(tileCoord, piece) : EMPTY_TILES_Cache.get(tileCoord);
-    }
 
-    private Tile(int tileCoord){
-        this.tileCoord = tileCoord;
-    }
-
-    //Cria os métodos somente para serem sobreescrevidos
-    public abstract boolean isTileOccupied();
-
-    public abstract Piece getPiece();
-
-    public static final class EmptyTile extends Tile{
-
-        //final coord para não ser mudada durante o uso da API
-        private EmptyTile(final int coord){
-            super(coord);
-        }
-
-        @Override
-        public boolean isTileOccupied() {
-            return false;
-        }
-
-        @Override
-        public Piece getPiece() {
-            return null;
-        }
-
-    }
-
-    public static final class OccupiedTile extends Tile {
-
-        //Privada para o valor ser adquirido somente pelo getPiece
-        private final Piece pieceOnTile;
-
-        private OccupiedTile(int tileCoord, Piece pieceOnTile){
-            super(tileCoord);
-            this.pieceOnTile = pieceOnTile;
-        }
-
-        @Override
-        public boolean isTileOccupied() {
-            return true;
-        }
-
-        @Override
-        public Piece getPiece() {
-            return this.pieceOnTile;
+    //verifica se o Tile esta ocupado, se sim, verifica a cor da peça
+    //se for preto, retorna a peça em minusculo
+    //se não estiver ocupado retorna "-"
+    @Override
+    public String toString() {
+        if(this.isTileOccupied()) {
+            return getPieceOnTile().getPieceColor().isBlack() ?
+            getPieceOnTile().toString().toLowerCase() :
+            getPieceOnTile().toString();
+        } else {
+            return "-";
         }
     }
-    
+
 }
