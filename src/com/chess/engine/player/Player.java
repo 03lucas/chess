@@ -138,7 +138,6 @@ public abstract class Player {
 
     //verifica se o movimento é legal
     public boolean isMoveLegal(final Move move) {
-        System.out.println("Legal Moves: " + this.legalMoves);
         return this.legalMoves.contains(move);
     }
 

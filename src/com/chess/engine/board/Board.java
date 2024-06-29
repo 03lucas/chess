@@ -21,7 +21,6 @@ import com.chess.engine.player.Player;
 import com.chess.engine.player.WhitePlayer;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
 
 public class Board {
     private final Map<Position, Tile> BOARD_MAP;
@@ -64,13 +63,12 @@ public class Board {
     }
 
     //calcular os movimentos legais de cada jogador
-    //TODO refazer todos os movimentos das peças
     private Collection<Move> calcLegalMoves(final Collection<Piece> pieces) {
         
         final List<Move> legalMoves = new ArrayList<>();
 
         for (Piece piece : pieces) {
-            piece.getPossibleMoves(this);
+            legalMoves.addAll(piece.getPossibleMoves(this));
         }
         
         return ImmutableList.copyOf(legalMoves);
@@ -84,7 +82,7 @@ public class Board {
         for (Tile tile : board_MAP.values()) {
 
             if (tile.isTileOccupied()) {
-                final Piece piece = tile.getPieceOnTile();
+                Piece piece = tile.getPieceOnTile();
                 if (piece.getPieceColor() == color) {
                     pieces.add(piece);
                 }
@@ -195,7 +193,6 @@ public class Board {
 
     //retorna os movimentos legais de ambos jogadores
     public Collection<Move> getAllLegalMoves() {
-        System.out.println("whitePlayer: " + this.whitePlayer.getLegalMoves());
         return Stream.concat(this.whitePlayer.getLegalMoves().stream(),
                              this.blackPlayer.getLegalMoves().stream()).collect(Collectors.toList());
     }
@@ -207,7 +204,7 @@ public class Board {
         Pawn enPassantPawn;
 
         public Builder() {
-            this.boardConfig = new HashMap<>();
+            this.boardConfig = new HashMap<Position, Piece>();
         }
 
         //associa uma peça a uma posição

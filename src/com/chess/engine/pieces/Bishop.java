@@ -18,7 +18,7 @@ public class Bishop extends Piece{
         super(piecePosition, PieceType.BISHOP, color);
     }
 
-    //TODO X = FILEIRA, Y = COLUNA
+    //TODO X = FILEIRA, Y = COLUNA x=0 y=2
     @Override
     public List<Move> getPossibleMoves(final Board board) {
         List<Move> pieceMoves = new ArrayList<>();
@@ -55,7 +55,6 @@ public class Bishop extends Piece{
             
         }
 
-        
         return ImmutableList.copyOf(pieceMoves);
     }
 

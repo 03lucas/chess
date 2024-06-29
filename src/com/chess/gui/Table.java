@@ -157,11 +157,11 @@ public class Table {
 
             addMouseListener(new MouseListener() {
 
+                //TODO, quando não é a vez do jogador, não deve ser possível mover as peças
                 @Override
                 public void mouseClicked(final MouseEvent e){
                     if(SwingUtilities.isRightMouseButton(e)){ /*cancela o movimento*/
                         sourceTile = null;
-                        destinationTile = null;
                         humanMovedPiece = null;
                     } else if(SwingUtilities.isLeftMouseButton(e)){ /*começa ou termina um movimento*/
                         //nao clicou em nenhum tile anteriormente
@@ -173,13 +173,14 @@ public class Table {
                             }
                         } else { /*ja selecionou um tile*/
                             destinationTile = chessBoard.getTileByPos(tileId);
+
+                            
                             //cria um movimento
                             final Move move = Move.MoveFactory.createMove(chessBoard, sourceTile.getPosition(), destinationTile.getPosition());
-                            System.out.println(destinationTile.getPosition().getXCoord() + " " + destinationTile.getPosition().getYCoord());
+                            
                             //executa o movimento
                             final MoveTransition transition = chessBoard.currentPlayer().makeMove(move);
-                            System.out.println(move.getDestinationCoordinate());
-                            System.out.println(transition.getTransitionMove().getDestinationCoordinate());
+                            
                             //se o movimento for valido
                             if(transition.getMoveStatus().isDone()){
                                 //atualiza o tabuleiro

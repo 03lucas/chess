@@ -26,8 +26,8 @@ public class Pawn extends Piece {
         int direction = (color == Color.WHITE) ? -1 : 1;
 
         // Movimento para frente (1 casa)
-        Position pos = new Position(start.getXCoord(), start.getYCoord() + direction);
-        System.out.println("pos: " + pos.getXCoord() + " AA " + pos.getYCoord());
+        Position pos = new Position(start.getXCoord() + direction, start.getYCoord());
+
         if (BoardUtils.isValidTileCoord(pos)) {
             Tile destTile = board.getTileByPos(pos);
             if (destTile.getPieceOnTile() == null) {
@@ -36,9 +36,10 @@ public class Pawn extends Piece {
         }
 
         // Movimento inicial (2 casas)
-        pos = new Position(start.getXCoord(), start.getYCoord() + (2 * direction));
+        pos = new Position(start.getXCoord() + (2 * direction), start.getYCoord());
 
         if (this.isFirstMove() && BoardUtils.isValidTileCoord(pos)) {
+            
             Tile destTile = board.getTile(pos.getXCoord(), pos.getYCoord());
             if (destTile.getPieceOnTile() == null) {
                 pieceMoves.add(new MajorMove(board, this, pos));
@@ -48,7 +49,7 @@ public class Pawn extends Piece {
         // Captura diagonal
         int[] dx = {1, -1};
         for (int i = 0; i < 2; i++) {
-            pos = new Position(start.getXCoord() + dx[i], start.getYCoord() + direction);
+            pos = new Position(start.getXCoord() + direction, start.getYCoord() + dx[i]);
             if (BoardUtils.isValidTileCoord(pos)) {
                 Tile destTile = board.getTile(pos.getXCoord(), pos.getYCoord());
                 if (destTile.getPieceOnTile() != null && destTile.getPieceOnTile().getPieceType() != this.getPieceType()) {
@@ -56,7 +57,7 @@ public class Pawn extends Piece {
                 }
             }
         }
-
+        
         return ImmutableList.copyOf(pieceMoves);
     }
 

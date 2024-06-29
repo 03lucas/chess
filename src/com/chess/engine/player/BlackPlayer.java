@@ -7,6 +7,7 @@ import java.util.List;
 import com.chess.engine.Color;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.Move;
+import com.chess.engine.board.Position;
 import com.chess.engine.pieces.Piece;
 import com.chess.engine.pieces.PieceType;
 import com.chess.engine.pieces.Rook;
@@ -48,16 +49,15 @@ public class BlackPlayer extends Player {
                 
                 if(kingSideRook != null && kingSideRook.isFirstMove()) {
 
-                    //!!!!SE DER NULLPOINTER EXCEPTION, TROCAR board.getTile().getPosition() POR new Position()
                     //verifica se as duas posicoes entre o rei e a torre estao sendo atacadas
-                    if(Player.calculateAttacksOnTile(board.getTile(0, 5).getPosition(), opponentsLegals).isEmpty() &&
-                       Player.calculateAttacksOnTile(board.getTile(0, 6).getPosition(), opponentsLegals).isEmpty() &&
+                    if(Player.calculateAttacksOnTile(new Position(0, 5), opponentsLegals).isEmpty() &&
+                       Player.calculateAttacksOnTile(new Position(0, 6), opponentsLegals).isEmpty() &&
                        kingSideRook.getPieceType() == PieceType.ROOK) {
                         
                         kingCastles.add(new Move.KingSideCastleMove(this.board, this.playerKing, 
-                                                                    board.getTile(0, 6).getPosition(), 
+                                                                    new Position(0, 6), 
                                                                     (Rook) kingSideRook, 
-                                                                    board.getTile(0, 5).getPosition()));
+                                                                    new Position(0, 5)));
                     
                     }
                     
@@ -65,23 +65,22 @@ public class BlackPlayer extends Player {
             }
 
             //verifica se tem peças entre o rei e a torre
-            if(!this.board.getTile(0, 1).isTileOccupied() && !this.board.getTile(0, 2).isTileOccupied() && !this.board.getTile(7, 3).isTileOccupied()) {
+            if(!this.board.getTile(0, 1).isTileOccupied() && !this.board.getTile(0, 2).isTileOccupied() && !this.board.getTile(0, 3).isTileOccupied()) {
                 
                 final Piece queenSideRook = this.board.getTile(0, 0).getPieceOnTile();
                 
                 if(queenSideRook != null && queenSideRook.isFirstMove()) {
 
-                    //!!!!SE DER NULLPOINTER EXCEPTION, TROCAR board.getTile().getPosition() POR new Position()
                     //verifica se as tres posicoes entre o rei e a torre estao sendo atacadas
-                    if(Player.calculateAttacksOnTile(board.getTile(0, 1).getPosition(), opponentsLegals).isEmpty() &&
-                       Player.calculateAttacksOnTile(board.getTile(0, 2).getPosition(), opponentsLegals).isEmpty() &&
-                       Player.calculateAttacksOnTile(board.getTile(0, 3).getPosition(), opponentsLegals).isEmpty() &&
+                    if(Player.calculateAttacksOnTile(new Position(0, 1), opponentsLegals).isEmpty() &&
+                       Player.calculateAttacksOnTile(new Position(0, 2), opponentsLegals).isEmpty() &&
+                       Player.calculateAttacksOnTile(new Position(0, 3), opponentsLegals).isEmpty() &&
                        queenSideRook.getPieceType() == PieceType.ROOK) {
                         
                         kingCastles.add(new Move.QueenSideCastleMove(this.board, this.playerKing, 
-                                                                    board.getTile(0, 2).getPosition(), 
+                                                                    new Position(0, 2), 
                                                                     (Rook) queenSideRook, 
-                                                                    board.getTile(0, 3).getPosition()));
+                                                                    new Position(0, 3)));
                     
                     }
                     

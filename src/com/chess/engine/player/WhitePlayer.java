@@ -7,6 +7,7 @@ import java.util.List;
 import com.chess.engine.Color;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.Move;
+import com.chess.engine.board.Position;
 import com.chess.engine.pieces.Piece;
 import com.google.common.collect.ImmutableList;
 import com.chess.engine.pieces.PieceType;
@@ -47,17 +48,17 @@ public class WhitePlayer extends Player {
                 final Piece kingSideRook = this.board.getTile(7, 7).getPieceOnTile();
                 
                 if(kingSideRook != null && kingSideRook.isFirstMove()) {
-
+                        
                     //!!!!SE DER NULLPOINTER EXCEPTION, TROCAR board.getTile().getPosition() POR new Position()
                     //verifica se as duas posicoes entre o rei e a torre estao sendo atacadas
-                    if(Player.calculateAttacksOnTile(board.getTile(7, 5).getPosition(),
-                                                                            opponentsLegals).isEmpty() &&
-                       Player.calculateAttacksOnTile(board.getTile(7, 6).getPosition(), 
-                                                                            opponentsLegals).isEmpty() &&
-                       kingSideRook.getPieceType() == PieceType.ROOK) {
+                    if(Player.calculateAttacksOnTile(new Position(7, 5),
+                                                        opponentsLegals).isEmpty() &&
+                       Player.calculateAttacksOnTile(new Position(7, 6), 
+                                                        opponentsLegals).isEmpty() &&
+                        kingSideRook.getPieceType() == PieceType.ROOK) {
                         
                         kingCastles.add(new Move.KingSideCastleMove(this.board, this.playerKing,
-                        board.getTile(7, 5).getPosition(), (Rook) kingSideRook, board.getTile(7, 6).getPosition()));
+                        new Position(7, 6), (Rook) kingSideRook, new Position(7, 5)));
                     
                     }
                     
@@ -75,16 +76,16 @@ public class WhitePlayer extends Player {
 
                     //!!!!SE DER NULLPOINTER EXCEPTION, TROCAR board.getTile().getPosition() POR new Position()
                     //verifica se as tres posicoes entre o rei e a torre estao sendo atacadas
-                    if(Player.calculateAttacksOnTile(board.getTile(7, 1).getPosition(),
+                    if(Player.calculateAttacksOnTile(new Position(7, 1),
                                                                             opponentsLegals).isEmpty() &&
-                       Player.calculateAttacksOnTile(board.getTile(7, 2).getPosition(), 
+                       Player.calculateAttacksOnTile(new Position(7, 2), 
                                                                             opponentsLegals).isEmpty() &&
-                       Player.calculateAttacksOnTile(board.getTile(7, 3).getPosition(), 
+                       Player.calculateAttacksOnTile(new Position(7, 3), 
                                                                             opponentsLegals).isEmpty() &&
                        queenSideRook.getPieceType() == PieceType.ROOK) {
                         
                         kingCastles.add(new Move.QueenSideCastleMove(this.board, this.playerKing,
-                        board.getTile(7, 2).getPosition(), (Rook) queenSideRook, board.getTile(7, 3).getPosition()));
+                        new Position(7, 2), (Rook) queenSideRook, new Position(7, 3)));
                     
                     }
                     
