@@ -30,14 +30,12 @@ public abstract class Player {
         this.playerKing = establishKing();
         
         //concatena os movimentos legais com os movimentos de castle
-        this.legalMoves = ImmutableList.copyOf(Iterables.concat(legalMoves,
-                                                calculateKingCastles(legalMoves, opponentMoves)));
+        this.legalMoves = ImmutableList.copyOf(Iterables.concat(legalMoves, calculateKingCastles(legalMoves, opponentMoves)));
 
         //não pode ser um boolean de true ou false pq
         //construtor de board -> construtor de player -> isInCheck -> 
         //hasEscapeMoves -> makeMove -> fazer um move constroi um board
-        this.isInCheck = !Player.calculateAttacksOnTile(this.playerKing.getPiecePosition(),
-                                                                            opponentMoves).isEmpty();
+        this.isInCheck = !Player.calculateAttacksOnTile(this.playerKing.getPiecePosition(), opponentMoves).isEmpty();
     }
 
     //verifica se o rei está em cheque passando por todos os ataques possiveis inimigos
@@ -47,7 +45,7 @@ public abstract class Player {
 
         for (final Move move : moves) {
 
-            if (piecePosition == move.getDestinationCoordinate()) {
+            if (piecePosition.equals(move.getDestinationCoordinate())) {
                 attackMoves.add(move);
             }
 
@@ -114,14 +112,8 @@ public abstract class Player {
 
         //calcula os ataques no rei
         //não é possivel fazer um movimento que coloque o rei em cheque
-        final Collection<Move> kingAttacks = Player.calculateAttacksOnTile(transitionBoard.
-                                                                            currentPlayer().
-                                                                            getOpponent().
-                                                                            getPlayerKing().
-                                                                            getPiecePosition(),
-                                                                            transitionBoard.
-                                                                            currentPlayer().
-                                                                            getLegalMoves());
+        final Collection<Move> kingAttacks = Player.calculateAttacksOnTile(transitionBoard.currentPlayer().getOpponent().getPlayerKing().getPiecePosition(),
+                                                                            transitionBoard.currentPlayer().getLegalMoves());
 
         //tem ataques no rei
         if(!kingAttacks.isEmpty()) {

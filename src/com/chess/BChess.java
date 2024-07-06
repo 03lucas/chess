@@ -11,5 +11,6 @@ public class BChess {
         System.out.println(board);
 
         Table table = new Table();
+        System.out.println(table);
     }
 }

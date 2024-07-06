@@ -30,11 +30,14 @@ public class Board {
     private final WhitePlayer whitePlayer;
     private final BlackPlayer blackPlayer;
     private final Player currentPlayer;
+    private final Pawn enPassantPawn;
 
     private Board(final Builder builder) {
         this.BOARD_MAP = createBoard(builder);
         this.whitePieces = calculateActivePieces(this.BOARD_MAP, Color.WHITE);
         this.blackPieces = calculateActivePieces(this.BOARD_MAP, Color.BLACK);
+
+        this.enPassantPawn = builder.enPassantPawn;
 
         final Collection<Move> whiteStandardLegalMoves = calcLegalMoves(this.whitePieces);
         final Collection<Move> blackStandardLegalMoves = calcLegalMoves(this.blackPieces);
@@ -51,7 +54,7 @@ public class Board {
         
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                final String tileText = this.getTile(i,j).toString();
+                final String tileText = this.getTile(i, j).toString();
                 builder.append(String.format("%3s", tileText));
                 if (j == 7) {
                     builder.append("\n");
@@ -112,16 +115,6 @@ public class Board {
 
         final Map<Position, Tile> boardMap = new HashMap<>();
 
-        //map.entry é um par de chave e valor
-        //cria as tile's com as respectivas peças associadas as posicoes
-        /*for (Map.Entry<Position, Piece> entry : builder.boardConfig.entrySet()) {
-            Position position = entry.getKey();
-            Piece piece = entry.getValue();
-            Tile tile = Tile.getInstance(position);
-            tile.setPieceOnTile(piece);
-            boardMap.put(position, tile);
-        }*/
-
         //cria as tile's
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -150,40 +143,40 @@ public class Board {
         final Builder builder = new Builder();
 
         // Black Layout
-        builder.setPiece(new Rook(new Position(0, 0), Color.BLACK));
-        builder.setPiece(new Knight(new Position(0, 1), Color.BLACK));
-        builder.setPiece(new Bishop(new Position(0, 2), Color.BLACK));
-        builder.setPiece(new Queen(new Position(0, 3), Color.BLACK));
-        builder.setPiece(new King(new Position(0, 4), Color.BLACK));
-        builder.setPiece(new Bishop(new Position(0, 5), Color.BLACK));
-        builder.setPiece(new Knight(new Position(0, 6), Color.BLACK));
-        builder.setPiece(new Rook(new Position(0, 7), Color.BLACK));
-        builder.setPiece(new Pawn(new Position(1, 0), Color.BLACK));
-        builder.setPiece(new Pawn(new Position(1, 1), Color.BLACK));
-        builder.setPiece(new Pawn(new Position(1, 2), Color.BLACK));
-        builder.setPiece(new Pawn(new Position(1, 3), Color.BLACK));
-        builder.setPiece(new Pawn(new Position(1, 4), Color.BLACK));
-        builder.setPiece(new Pawn(new Position(1, 5), Color.BLACK));
-        builder.setPiece(new Pawn(new Position(1, 6), Color.BLACK));
-        builder.setPiece(new Pawn(new Position(1, 7), Color.BLACK));
+        builder.setPiece(new Rook(new Position(0, 0), Color.BLACK, true));
+        builder.setPiece(new Knight(new Position(0, 1), Color.BLACK, true));
+        builder.setPiece(new Bishop(new Position(0, 2), Color.BLACK, true));
+        builder.setPiece(new Queen(new Position(0, 3), Color.BLACK, true));
+        builder.setPiece(new King(new Position(0, 4), Color.BLACK, true));
+        builder.setPiece(new Bishop(new Position(0, 5), Color.BLACK, true));
+        builder.setPiece(new Knight(new Position(0, 6), Color.BLACK, true));
+        builder.setPiece(new Rook(new Position(0, 7), Color.BLACK, true));
+        builder.setPiece(new Pawn(new Position(1, 0), Color.BLACK, true));
+        builder.setPiece(new Pawn(new Position(1, 1), Color.BLACK, true));
+        builder.setPiece(new Pawn(new Position(1, 2), Color.BLACK, true));
+        builder.setPiece(new Pawn(new Position(1, 3), Color.BLACK, true));
+        builder.setPiece(new Pawn(new Position(1, 4), Color.BLACK, true));
+        builder.setPiece(new Pawn(new Position(1, 5), Color.BLACK, true));
+        builder.setPiece(new Pawn(new Position(1, 6), Color.BLACK, true));
+        builder.setPiece(new Pawn(new Position(1, 7), Color.BLACK, true));
 
         // White Layout
-        builder.setPiece(new Rook(new Position(7, 0), Color.WHITE));
-        builder.setPiece(new Knight(new Position(7, 1), Color.WHITE));
-        builder.setPiece(new Bishop(new Position(7, 2), Color.WHITE));
-        builder.setPiece(new Queen(new Position(7, 3), Color.WHITE));
-        builder.setPiece(new King(new Position(7, 4), Color.WHITE));
-        builder.setPiece(new Bishop(new Position(7, 5), Color.WHITE));
-        builder.setPiece(new Knight(new Position(7, 6), Color.WHITE));
-        builder.setPiece(new Rook(new Position(7, 7), Color.WHITE));
-        builder.setPiece(new Pawn(new Position(6, 0), Color.WHITE));
-        builder.setPiece(new Pawn(new Position(6, 1), Color.WHITE));
-        builder.setPiece(new Pawn(new Position(6, 2), Color.WHITE));
-        builder.setPiece(new Pawn(new Position(6, 3), Color.WHITE));
-        builder.setPiece(new Pawn(new Position(6, 4), Color.WHITE));
-        builder.setPiece(new Pawn(new Position(6, 5), Color.WHITE));
-        builder.setPiece(new Pawn(new Position(6, 6), Color.WHITE));
-        builder.setPiece(new Pawn(new Position(6, 7), Color.WHITE));
+        builder.setPiece(new Rook(new Position(7, 0), Color.WHITE, true));
+        builder.setPiece(new Knight(new Position(7, 1), Color.WHITE, true));
+        builder.setPiece(new Bishop(new Position(7, 2), Color.WHITE, true));
+        builder.setPiece(new Queen(new Position(7, 3), Color.WHITE, true));
+        builder.setPiece(new King(new Position(7, 4), Color.WHITE, true));
+        builder.setPiece(new Bishop(new Position(7, 5), Color.WHITE, true));
+        builder.setPiece(new Knight(new Position(7, 6), Color.WHITE, true));
+        builder.setPiece(new Rook(new Position(7, 7), Color.WHITE, true));
+        builder.setPiece(new Pawn(new Position(6, 0), Color.WHITE, true));
+        builder.setPiece(new Pawn(new Position(6, 1), Color.WHITE, true));
+        builder.setPiece(new Pawn(new Position(6, 2), Color.WHITE, true));
+        builder.setPiece(new Pawn(new Position(6, 3), Color.WHITE, true));
+        builder.setPiece(new Pawn(new Position(6, 4), Color.WHITE, true));
+        builder.setPiece(new Pawn(new Position(6, 5), Color.WHITE, true));
+        builder.setPiece(new Pawn(new Position(6, 6), Color.WHITE, true));
+        builder.setPiece(new Pawn(new Position(6, 7), Color.WHITE, true));
 
         //define quem começa o jogo
         builder.setMoveMaker(Color.WHITE);
@@ -193,8 +186,7 @@ public class Board {
 
     //retorna os movimentos legais de ambos jogadores
     public Collection<Move> getAllLegalMoves() {
-        return Stream.concat(this.whitePlayer.getLegalMoves().stream(),
-                             this.blackPlayer.getLegalMoves().stream()).collect(Collectors.toList());
+        return Stream.concat(this.whitePlayer.getLegalMoves().stream(), this.blackPlayer.getLegalMoves().stream()).collect(Collectors.toList());
     }
 
     //builder principal
@@ -223,8 +215,9 @@ public class Board {
             return new Board(this);
         }
 
-        public void setEnPassantPawn(Pawn movedPawn) {
+        public Builder setEnPassantPawn(final Pawn movedPawn) {
             this.enPassantPawn = movedPawn;
+            return this;
         }
     }
 
@@ -246,5 +239,10 @@ public class Board {
 
     public Player currentPlayer() {
         return this.currentPlayer;
+    }
+
+    //se tem peao enPassant
+    public Pawn getEnPassantPawn() {
+        return this.enPassantPawn;
     }
 }

@@ -1,6 +1,6 @@
 package com.chess.engine.pieces;
 
-import java.util.List;
+import java.util.Collection;
 
 import com.chess.engine.board.Board;
 import com.chess.engine.board.Move;
@@ -16,11 +16,11 @@ public abstract class Piece {
     protected final boolean isFirstMove;
     
 
-    Piece(final Position piecePosition, PieceType pieceType, Color color) {
+    Piece(final Position piecePosition, final PieceType pieceType, final Color color, final boolean isFirstMove) {
         this.piecePosition = piecePosition;
         this.pieceType = pieceType;
         this.color = color;
-        this.isFirstMove = true;
+        this.isFirstMove = isFirstMove;
         this.cachedHashCode = computeHashCode();
     }
 
@@ -37,23 +37,6 @@ public abstract class Piece {
         return this.piecePosition;
     }
 
-    /*public void setPiecePosition(Position position) {
-        this.piecePosition = position;
-    }
-
-    //pega a posicao da casa atual
-    public Tile getCurrentTile() {
-        return this.currentTile;
-    }
-
-    public void setCurrentTile(Tile tile) {
-        this.currentTile = tile;
-    }
-
-    public Board getBoard(){
-        return this.board;
-    }*/
-
     public PieceType getPieceType(){
         return this.pieceType;
     }
@@ -66,42 +49,8 @@ public abstract class Piece {
         return this.color;
     }
 
-    /*
-    //calcula os movimentos legais da peça
-    private List<Tile> calcLegalMoves(final Board board) {
-        
-        List<Tile> legalMoves = new ArrayList<>();
-
-        //itera pela lista de movimentos possiveis
-        for(Position position : possibleMoves){
-
-            //            /*possible move*/       /*peça atual//           
-            int xCoord = position.getXCoord() + piecePosition.getXCoord();
-            int yCoord = position.getYCoord() + piecePosition.getYCoord();
-
-            //pega a casa de destino
-            Tile destTile = board.getTile(xCoord, yCoord);
-            if(destTile == null) continue; //evitar nullpointer exception se for negativo
-
-            if(BoardUtils.isValidTileCoord(destTile.getPosition())){
-
-                if(destTile.getPieceOnTile() == null){
-                    legalMoves.add(destTile);
-                } else {
-                    final Piece pieceAtDest = destTile.getPieceOnTile();
-                    if(pieceAtDest.getPieceType() != this.pieceType){
-                        legalMoves.add(destTile);
-                    }
-                }
-            }
-            
-        }
-
-        return ImmutableList.copyOf(legalMoves);
-    }*/
-
     //metodo para cada peça implementar sua propria logica de movimento
-    public abstract List<Move> getPossibleMoves(final Board board);
+    public abstract Collection<Move> getPossibleMoves(final Board board);
 
     public abstract Piece movePiece(Move move);
 

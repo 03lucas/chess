@@ -1,11 +1,13 @@
 package com.chess.engine.pieces;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
+import com.chess.engine.board.Move.MajorAttackMove;
 import com.chess.engine.board.Move.MajorMove;
 import com.chess.engine.board.Position;
 import com.chess.engine.board.Tile;
@@ -14,12 +16,12 @@ import com.google.common.collect.ImmutableList;
 
 public class Knight extends Piece{
 
-    public Knight(Position piecePosition, Color color) {
-        super(piecePosition, PieceType.KNIGHT, color);
+    public Knight(final Position piecePosition, final Color color, final boolean isFirstMove) {
+        super(piecePosition, PieceType.KNIGHT, color, isFirstMove);
     }
 
     @Override
-    public List<Move> getPossibleMoves(final Board board) {
+    public Collection<Move> getPossibleMoves(final Board board) {
         List<Move> pieceMoves = new ArrayList<>();
 
         int[] dx = {-2, -1, 1, 2, 2, 1, -1, -2};
@@ -34,13 +36,13 @@ public class Knight extends Piece{
             
             if (BoardUtils.isValidTileCoord(pos)) {
                 Tile destTile = board.getTileByPos(pos);
-                if (destTile.getPieceOnTile() == null) {
+                
+                if (!destTile.isTileOccupied()) {
                     Move move = new MajorMove(board, this, pos);
                     pieceMoves.add(move);
                 } else {
                     if (destTile.getPieceOnTile().getPieceColor() != this.getPieceColor()) {
-                        //TODO major attack move
-                        Move move = new MajorMove(board, this, pos);
+                        Move move = new MajorAttackMove(board, this, pos, destTile.getPieceOnTile());
                         pieceMoves.add(move);
                     }
                     
@@ -58,7 +60,7 @@ public class Knight extends Piece{
 
     @Override
     public Knight movePiece(final Move move) {
-        return new Knight(move.getDestinationCoordinate(), move.getMovedPiece().getPieceColor());
+        return new Knight(move.getDestinationCoordinate(), move.getMovedPiece().getPieceColor(), false);
     }
 
 }

@@ -1,24 +1,27 @@
 package com.chess.engine.pieces;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
+import com.chess.engine.board.Move.MajorAttackMove;
 import com.chess.engine.board.Move.MajorMove;
 import com.chess.engine.board.Position;
+import com.chess.engine.board.Tile;
 import com.chess.engine.Color;
 import com.google.common.collect.ImmutableList;
 
 public class Queen extends Piece{
 
-    public Queen(Position piecePosition, Color color) {
-        super(piecePosition, PieceType.QUEEN, color);
+    public Queen(final Position piecePosition, final Color color, final boolean isFirstMove) {
+        super(piecePosition, PieceType.QUEEN, color, isFirstMove);
     }
 
      @Override
-     public List<Move> getPossibleMoves(final Board board) {
+     public Collection<Move> getPossibleMoves(final Board board) {
         List<Move> pieceMoves = new ArrayList<>();
 
         int[] dx = {1, 1, -1, -1, 1, -1, 0, 0};
@@ -32,8 +35,19 @@ public class Queen extends Piece{
             Position pos = new Position(newX, newY);
 
             while (BoardUtils.isValidTileCoord(pos)) {
-                Move move = new MajorMove(board, this, pos);
-                pieceMoves.add(move);
+                Tile destTile = board.getTileByPos(pos);
+                
+                if (!destTile.isTileOccupied()) {
+                    Move move = new MajorMove(board, this, pos);
+                    pieceMoves.add(move);
+                } else {
+                    if (destTile.getPieceOnTile().getPieceColor() != this.getPieceColor()) {
+                        Move move = new MajorAttackMove(board, this, pos, destTile.getPieceOnTile());
+                        pieceMoves.add(move);
+                    }
+                    break;
+                }
+
                 newX += dx[i];
                 newY += dy[i];
                 pos = new Position(newX, newY);
@@ -50,7 +64,7 @@ public class Queen extends Piece{
 
     @Override
     public Queen movePiece(final Move move) {
-        return new Queen(move.getDestinationCoordinate(), move.getMovedPiece().getPieceColor());
+        return new Queen(move.getDestinationCoordinate(), move.getMovedPiece().getPieceColor(), false);
     }
 
 }

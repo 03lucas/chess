@@ -49,16 +49,14 @@ public class WhitePlayer extends Player {
                 
                 if(kingSideRook != null && kingSideRook.isFirstMove()) {
                         
-                    //!!!!SE DER NULLPOINTER EXCEPTION, TROCAR board.getTile().getPosition() POR new Position()
                     //verifica se as duas posicoes entre o rei e a torre estao sendo atacadas
-                    if(Player.calculateAttacksOnTile(new Position(7, 5),
-                                                        opponentsLegals).isEmpty() &&
-                       Player.calculateAttacksOnTile(new Position(7, 6), 
-                                                        opponentsLegals).isEmpty() &&
+                    if(Player.calculateAttacksOnTile(new Position(7, 5), opponentsLegals).isEmpty() &&
+                       Player.calculateAttacksOnTile(new Position(7, 6), opponentsLegals).isEmpty() &&
                         kingSideRook.getPieceType() == PieceType.ROOK) {
                         
-                        kingCastles.add(new Move.KingSideCastleMove(this.board, this.playerKing,
-                        new Position(7, 6), (Rook) kingSideRook, new Position(7, 5)));
+                        kingCastles.add(new Move.KingSideCastleMove(this.board, 
+                                                                    this.playerKing, new Position(7, 6), 
+                                                                    (Rook) kingSideRook, new Position(7, 5)));
                     
                     }
                     
@@ -74,18 +72,15 @@ public class WhitePlayer extends Player {
                 
                 if(queenSideRook != null && queenSideRook.isFirstMove()) {
 
-                    //!!!!SE DER NULLPOINTER EXCEPTION, TROCAR board.getTile().getPosition() POR new Position()
                     //verifica se as tres posicoes entre o rei e a torre estao sendo atacadas
-                    if(Player.calculateAttacksOnTile(new Position(7, 1),
-                                                                            opponentsLegals).isEmpty() &&
-                       Player.calculateAttacksOnTile(new Position(7, 2), 
-                                                                            opponentsLegals).isEmpty() &&
-                       Player.calculateAttacksOnTile(new Position(7, 3), 
-                                                                            opponentsLegals).isEmpty() &&
+                    if(Player.calculateAttacksOnTile(new Position(7, 1), opponentsLegals).isEmpty() &&
+                       Player.calculateAttacksOnTile(new Position(7, 2), opponentsLegals).isEmpty() &&
+                       Player.calculateAttacksOnTile(new Position(7, 3), opponentsLegals).isEmpty() &&
                        queenSideRook.getPieceType() == PieceType.ROOK) {
                         
-                        kingCastles.add(new Move.QueenSideCastleMove(this.board, this.playerKing,
-                        new Position(7, 2), (Rook) queenSideRook, new Position(7, 3)));
+                        kingCastles.add(new Move.QueenSideCastleMove(this.board, 
+                                                                    this.playerKing, new Position(7, 2), 
+                                                                    (Rook) queenSideRook, new Position(7, 3)));
                     
                     }
                     
