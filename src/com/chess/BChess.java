@@ -9,8 +9,8 @@ public class BChess {
         Board board = Board.createStandardBoard();
 
         System.out.println(board);
+        
+        Table.get().show();
 
-        Table table = new Table();
-        System.out.println(table);
     }
 }

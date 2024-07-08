@@ -6,9 +6,9 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -28,6 +28,9 @@ class TakenPiecesPanel extends JPanel {
     private static final Dimension TAKEN_PIECES_PANEL_DIMENSION = new Dimension(80, 80);
     private static final EtchedBorder PANEL_BORDER = new EtchedBorder(EtchedBorder.RAISED);
 
+    private final Set<Piece> whiteTakenPieces;
+    private final Set<Piece> blackTakenPieces;
+
     public TakenPiecesPanel() {
         super(new BorderLayout());
         setBackground(Color.decode("0xFDF5E6"));
@@ -39,38 +42,41 @@ class TakenPiecesPanel extends JPanel {
         add(this.northPanel, BorderLayout.NORTH);
         add(this.southPanel, BorderLayout.SOUTH);
         setPreferredSize(TAKEN_PIECES_PANEL_DIMENSION);
+
+        this.whiteTakenPieces = new HashSet<>();
+        this.blackTakenPieces = new HashSet<>();
     }
 
     public void redo(final MoveLog moveLog) {
-
         northPanel.removeAll();
         southPanel.removeAll();
-    
+
+        whiteTakenPieces.clear();
+        blackTakenPieces.clear();
+
         for (Move move : moveLog.getMoves()) {
             if (move.isAttack()) {
                 final Piece killedPiece = move.getAttackedPiece();
-                BufferedImage icon = null;
-                try {
-                    String path = "art/pieces/" + killedPiece.getPieceColor().toString().substring(0, 1) +
-                            killedPiece.getPieceType().toString() + ".png";
-                    icon = ImageIO.read(new File(path));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-    
+                BufferedImage icon = ImageCache.getPieceImage(killedPiece);
+
                 if (icon != null) {
-                    final ImageIcon ic = new ImageIcon(icon);
-                    final JLabel imageLabel = new JLabel(new ImageIcon(ic.getImage().getScaledInstance(
-                            30, 30, Image.SCALE_SMOOTH)));
                     if (killedPiece.getPieceColor().isWhite()) {
-                        northPanel.add(imageLabel);
+                        if (whiteTakenPieces.add(killedPiece)) {
+                            final ImageIcon ic = new ImageIcon(icon);
+                            final JLabel imageLabel = new JLabel(new ImageIcon(ic.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+                            northPanel.add(imageLabel);
+                        }
                     } else {
-                        southPanel.add(imageLabel);
+                        if (blackTakenPieces.add(killedPiece)) {
+                            final ImageIcon ic = new ImageIcon(icon);
+                            final JLabel imageLabel = new JLabel(new ImageIcon(ic.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+                            southPanel.add(imageLabel);
+                        }
                     }
                 }
             }
         }
-    
+
         validate();
         repaint();
     }

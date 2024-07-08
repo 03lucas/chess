@@ -2,11 +2,17 @@ package tests.com.chess.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 import com.chess.engine.board.Board;
+import com.chess.engine.board.BoardUtils;
+import com.chess.engine.board.Move;
+import com.chess.engine.board.MoveTransition;
 import com.chess.engine.board.Position;
+import com.chess.engine.player.AI.MiniMax;
+import com.chess.engine.player.AI.MoveStrategy;
 
 public class TestBoard {
 
@@ -34,5 +40,25 @@ public class TestBoard {
         //assertFalse(board.currentPlayer().getOpponent().isQueenSideCastleCapable());
         assertEquals(board.currentPlayer().getOpponent().getLegalMoves().size(), 20);
         assertEquals(board.currentPlayer().getOpponent().getOpponent().getLegalMoves().size(), 20);
+    }
+
+    @Test
+    public void testFoolsMate() {
+
+        final Board board = Board.createStandardBoard();
+
+        final MoveTransition t1 = board.currentPlayer().makeMove(Move.MoveFactory.createMove(board, BoardUtils.INSTANCE.getCoordinateAtPosition("f2"), BoardUtils.INSTANCE.getCoordinateAtPosition("f3")));
+        assertTrue(t1.getMoveStatus().isDone());
+
+        final MoveTransition t2 = t1.getToBoard().currentPlayer().makeMove(Move.MoveFactory.createMove(t1.getToBoard(), BoardUtils.INSTANCE.getCoordinateAtPosition("e7"), BoardUtils.INSTANCE.getCoordinateAtPosition("e5")));
+        assertTrue(t2.getMoveStatus().isDone());
+
+        final MoveTransition t3 = t2.getToBoard().currentPlayer().makeMove(Move.MoveFactory.createMove(t2.getToBoard(), BoardUtils.INSTANCE.getCoordinateAtPosition("g2"), BoardUtils.INSTANCE.getCoordinateAtPosition("g4")));
+        assertTrue(t3.getMoveStatus().isDone());
+        
+        final MoveStrategy miniMax = new MiniMax(4);
+        final Move aiMove = miniMax.execute(t3.getToBoard());
+        final Move bestMove = Move.MoveFactory.createMove(t3.getToBoard(), BoardUtils.INSTANCE.getCoordinateAtPosition("d8"), BoardUtils.INSTANCE.getCoordinateAtPosition("h4"));
+        assertEquals(aiMove, bestMove);
     }
 }

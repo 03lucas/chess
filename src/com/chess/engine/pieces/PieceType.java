@@ -2,7 +2,7 @@ package com.chess.engine.pieces;
 
 public enum PieceType {
 
-    PAWN(1, "P"), KNIGHT(3, "N"), BISHOP(3, "B"), ROOK(5, "R"), QUEEN(9, "Q"), KING(-1, "K");
+    PAWN(100, "P"), KNIGHT(300, "N"), BISHOP(300, "B"), ROOK(500, "R"), QUEEN(900, "Q"), KING(10000, "K");
 
     private final int value;
     private final String pieceName;
