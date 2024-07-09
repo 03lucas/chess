@@ -11,7 +11,6 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 
-import com.chess.engine.Color;
 import com.chess.engine.player.Player;
 import com.chess.gui.Table.PlayerType;
 
@@ -24,19 +23,19 @@ public class GameSetup extends JDialog {
     private PlayerType blackPlayerType;
     private JSpinner searchDepthSpinner;
 
-    private static final String HUMAN_TEXT = "Human";
-    private static final String COMPUTER_TEXT = "Computer";
+    private static final String HUMAN_TEXT = "Humano";
+    private static final String COMPUTER_TEXT = "Computador";
 
     GameSetup(final JFrame frame, final boolean modal) {
         super(frame, modal);
 
         final JPanel myPanel = new JPanel(new GridLayout(0, 1));
 
-        final JRadioButton whiteHumanButton = new JRadioButton("White Human");
-        final JRadioButton blackHumanButton = new JRadioButton("Black Human");
-        final JRadioButton whiteComputerButton = new JRadioButton("White Computer");
-        final JRadioButton blackComputerButton = new JRadioButton("Black Computer");
-        whiteHumanButton.setActionCommand("White Human");
+        final JRadioButton whiteHumanButton = new JRadioButton("Jogador -Branco");
+        final JRadioButton blackHumanButton = new JRadioButton("Jogador - Preto");
+        final JRadioButton whiteComputerButton = new JRadioButton("Computador - Branco");
+        final JRadioButton blackComputerButton = new JRadioButton("Computador - Preto");
+        whiteHumanButton.setActionCommand("Jogador - Branco");
 
         final ButtonGroup whiteGroup = new ButtonGroup();
         whiteGroup.add(whiteHumanButton);
@@ -49,17 +48,17 @@ public class GameSetup extends JDialog {
         blackHumanButton.setSelected(true);
 
         getContentPane().add(myPanel);
-        myPanel.add(new JLabel("White"));
+        myPanel.add(new JLabel("Branco"));
         myPanel.add(whiteHumanButton);
         myPanel.add(whiteComputerButton);
-        myPanel.add(new JLabel("Black"));
+        myPanel.add(new JLabel("Preto"));
         myPanel.add(blackHumanButton);
         myPanel.add(blackComputerButton);
 
-        myPanel.add(new JLabel("Search"));
-        this.searchDepthSpinner = addLabeledSpinner(myPanel, "search depth", new SpinnerNumberModel(6, 0, Integer.MAX_VALUE, 1));
+        myPanel.add(new JLabel("Analise"));
+        this.searchDepthSpinner = addLabeledSpinner(myPanel, "Profundidade da analise", new SpinnerNumberModel(4, 0, 20, 1));
 
-        final JButton cancelButton = new JButton("Cancel");
+        final JButton cancelButton = new JButton("Cancelar");
         final JButton okButton = new JButton("OK");
 
         okButton.addActionListener(e -> {
@@ -69,7 +68,7 @@ public class GameSetup extends JDialog {
         });
 
         cancelButton.addActionListener(e -> {
-            System.out.println("Cancel");
+            System.out.println("Cancelar");
             GameSetup.this.setVisible(false);
         });
 

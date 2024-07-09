@@ -55,6 +55,7 @@ public class GameHistoryPanel extends JPanel {
             moveLogSize++;
         }
         
+        return;
     }
 
     private String calculateCheckAndCheckMateHash(final Board board) {
@@ -69,7 +70,7 @@ public class GameHistoryPanel extends JPanel {
     private static class DataModel extends DefaultTableModel {
 
         private final List<Row> values;
-        private static final String[] NAMES = {"White", "Black"};
+        private static final String[] NAMES = {"Branco", "Preto"};
 
         DataModel() {
             this.values = new ArrayList<>();

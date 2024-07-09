@@ -30,7 +30,7 @@ public class MiniMax implements MoveStrategy {
         int lowestSeenValue = Integer.MAX_VALUE;
         int currentValue;
         
-        System.out.println(board.currentPlayer() + " thinking with depth = " + this.searchDepth);
+        System.out.println(board.currentPlayer().getColor().name().toLowerCase() + " AI thinking with depth = " + this.searchDepth);
 
         int numMoves = board.currentPlayer().getLegalMoves().size();
 

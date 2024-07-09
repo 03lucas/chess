@@ -20,13 +20,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.awt.GridLayout;
 
 public class Table extends Observable{
 
@@ -48,7 +48,6 @@ public class Table extends Observable{
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(800, 700);
     private static final Dimension BOARD_PANEL_DIMENSION = new Dimension(500, 500);
     private static final Dimension TILE_PANEL_DIMENSION = new Dimension(65, 65);
-    private static final String PieceIconPath = "art/pieces/";
 
     private static final Table INSTANCE = new Table();
 
@@ -76,7 +75,7 @@ public class Table extends Observable{
         //direcao do tabuleiro
         this.boardDirection = BoardDirection.NORMAL;
         //caixa que destacara os movimentos legais
-        this.highlightLegalMoves = true;
+        this.highlightLegalMoves = false;
         this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
         //adiciona o painel do tabuleiro ao frame
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
@@ -209,7 +208,7 @@ public class Table extends Observable{
         preferencesMenu.addSeparator();
 
         //caixa de selecao para destacar os movimentos
-        final JCheckBoxMenuItem legalMoveHighlighterCheckbox = new JCheckBoxMenuItem("Highlight Legal Moves", true);
+        final JCheckBoxMenuItem legalMoveHighlighterCheckbox = new JCheckBoxMenuItem("Destacar Movimentos", false);
 
         //acao do botao
         legalMoveHighlighterCheckbox.addActionListener(new ActionListener() {
@@ -242,11 +241,13 @@ public class Table extends Observable{
         return optionsMenu;
     }
 
+    //metodo para atualizar o jogo
     private void setupUpdate(final GameSetup gameSetup) {
         setChanged();
         notifyObservers(gameSetup);
     }
 
+    //observador para a IA saber quando e o turno dela
     private static class TableGameAiWatcher implements Observer {
 
         @Override
@@ -307,7 +308,7 @@ public class Table extends Observable{
 
         @Override
         protected Move doInBackground() throws Exception {
-            final MoveStrategy miniMax = new MiniMax(4);
+            final MoveStrategy miniMax = new MiniMax(Table.get().getGameSetup().getSearchDepth());
             final Move bestMove = miniMax.execute(Table.get().getGameBoard());
             return bestMove;
         }
@@ -369,6 +370,7 @@ public class Table extends Observable{
 
     }
 
+    //painel de historico de jogadas
     public static class MoveLog {
 
         private final List<Move> moves;
@@ -463,7 +465,7 @@ public class Table extends Observable{
                                 //reseta as variaveis
                                 sourceTile = null;
                                 humanMovedPiece = null;
-                                //boardPanel.drawBoard(chessBoard);
+                                boardPanel.drawBoard(chessBoard);
                             }
                         }
                         SwingUtilities.invokeLater(new Runnable() {
@@ -521,17 +523,10 @@ public class Table extends Observable{
         private void assignTilePieceIcon(final Board board) {
             this.removeAll();
             if (board.getTileByPos(tileId).isTileOccupied()) {
-                try {
-                    final BufferedImage image = ImageIO.read(new File(PieceIconPath + /*diretorio das imagens*/
-                            //pega a primeira letra da cor da peça e a peça em si
-                            //ex: BKing.gif, B = Black, King = Rei
-                            board.getTileByPos(tileId).getPieceOnTile().getPieceColor().toString().charAt(0) +
-                            board.getTileByPos(tileId).getPieceOnTile().toString() +
-                            ".png"));
-                    add(new JLabel(new ImageIcon(image)));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                final Piece piece = board.getTileByPos(tileId).getPieceOnTile();
+                BufferedImage icon = ImageCache.getPieceImage(piece);
+                final ImageIcon ic = new ImageIcon(icon);
+                add(new JLabel(ic));
             }
         }
 
@@ -551,14 +546,16 @@ public class Table extends Observable{
         private void highlightLegals(final Board board){
             //se a opcao esta ativa
             if(highlightLegalMoves){
-                //pega os movimentos legais da peça selecionada
-                Collection<Move> legalMoves = pieceLegalMoves(board);
-                //verifica se o tile atual está nos movimentos legais
-                if(legalMoves.stream().anyMatch(move -> move.getDestinationCoordinate().equals(this.tileId))){
-                    try{/*desenha um botao verde na casa*/
-                        add(new JLabel(new ImageIcon(ImageIO.read(new File("art/misc/green_dot.png")))));
-                    } catch(Exception e){
-                        e.printStackTrace();
+                //verifica todos os movimentos da peca
+                for (final Move move : pieceLegalMoves(board)) {
+                    //se o movimento de destino for igual a casa atual adiciona um ponto verde
+                    if (move.getDestinationCoordinate().equals(this.tileId)) {
+                        try {
+                            add(new JLabel(new ImageIcon(ImageIO.read(new File("art/misc/green_dot.png")))));
+                        }
+                        catch (final IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
