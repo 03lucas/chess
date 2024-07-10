@@ -1,20 +1,18 @@
-## XADREZ EM JAVA
+# XADREZ EM JAVA
 
-## Visao
+## Visão Geral
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Jogo de xadrez totalmente funcional implementado em Java utilizando os princípios da programação orientada a objetos (POO).
+Interface gráfica construida com javax.swing e IA que utiliza o algoritmo MiniMax.
 
-## V
+## Dependências
 
-The workspace contains two folders by default, where:
+- Guava 33.2.1: Utilizado para listas imutáveis
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+- JUnit: Para testes unitários
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+>Baixar ambos e adicionar ao classpath
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+### Executando
 
-## Dependencias
-
-
+Execute a partir da classe BChess que contém o método main
