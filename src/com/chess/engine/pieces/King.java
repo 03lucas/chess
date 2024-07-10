@@ -15,11 +15,9 @@ import com.chess.engine.Color;
 import com.google.common.collect.ImmutableList;
 
 public class King extends Piece {
-    private boolean castlingDone;
 
     public King(final Position piecePosition, final Color color, final boolean isFirstMove) {
         super(piecePosition, PieceType.KING, color, isFirstMove);
-        this.castlingDone = false;
     }
 
     @Override
@@ -52,10 +50,6 @@ public class King extends Piece {
         }
 
         return ImmutableList.copyOf(pieceMoves);
-    }
-
-    public boolean isCastlingDone() {
-        return this.castlingDone;
     }
     
     @Override

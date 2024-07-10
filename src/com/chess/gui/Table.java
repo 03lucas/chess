@@ -262,13 +262,13 @@ public class Table extends Observable{
 
             if(Table.get().getGameBoard().currentPlayer().isInCheckMate()){
                 JOptionPane.showMessageDialog(Table.get().getBoardPanel(),
-                        "Game Over, " + Table.get().getGameBoard().currentPlayer() + " está em checkmate!",
+                        "Game Over, " + Table.get().getGameBoard().currentPlayer().getColor().name().toLowerCase() + " player is in checkmate!",
                         "Game Over", JOptionPane.INFORMATION_MESSAGE);
             }
 
             if(Table.get().getGameBoard().currentPlayer().isInStaleMate()){
                 JOptionPane.showMessageDialog(Table.get().getBoardPanel(),
-                        "Game Over, " + Table.get().getGameBoard().currentPlayer() + " está em stalemate!",
+                        "Game Over, " + Table.get().getGameBoard().currentPlayer().getColor().name().toLowerCase() + " player is in stalemate!",
                         "Game Over", JOptionPane.INFORMATION_MESSAGE);
             }
         }
@@ -465,7 +465,6 @@ public class Table extends Observable{
                                 //reseta as variaveis
                                 sourceTile = null;
                                 humanMovedPiece = null;
-                                boardPanel.drawBoard(chessBoard);
                             }
                         }
                         SwingUtilities.invokeLater(new Runnable() {
@@ -473,11 +472,7 @@ public class Table extends Observable{
                             public void run() {
                                 gameHistoryPanel.redo(chessBoard, moveLog);
                                 takenPiecesPanel.redo(moveLog);
-
-                                if(gameSetup.isAIPlayer(chessBoard.currentPlayer())){
-                                    Table.get().moveMadeUpdate(PlayerType.HUMAN);
-                                }
-
+                                Table.get().moveMadeUpdate(PlayerType.HUMAN);
                                 boardPanel.drawBoard(chessBoard);
                             }
                         });
